@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
+	"time"
 )
 
 // this should be an API
@@ -20,6 +22,15 @@ type redirect struct {
 	SubPath string
 }
 
+func generateRandString() string {
+	const alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	bytes := make([]byte, 6)
+	for i := range bytes {
+		bytes[i] = alpha[rand.Intn(len(alpha))]
+	}
+	return string(bytes)
+}
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
@@ -32,6 +43,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	rand.Seed(time.Now().Unix())
 	http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(":8000", nil)
 }
