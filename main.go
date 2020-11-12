@@ -36,10 +36,15 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		// serve the home page
 		http.ServeFile(w, r, "index.html")
+		return
 	case "POST":
 		body, _ := ioutil.ReadAll(r.Body)
 		fmt.Println(string(body))
+		return
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
+
 }
 
 func main() {
