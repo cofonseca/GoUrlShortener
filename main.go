@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -18,9 +19,9 @@ import (
 // We need to store all of these sub-paths as well as the URLs that they should go to
 // We need a router that can read these sub-paths from a db and  redirect to the real URL
 
-type redirect struct {
-	FullURL string
-	SubPath string
+type urlMap struct {
+	FullURL  string
+	Shortcut string
 }
 
 func generateRandString() string {
@@ -40,30 +41,41 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 
 	case "POST":
-		// sanitize the URL
+		// Unmarshal JSON
 		body, _ := ioutil.ReadAll(r.Body)
-		fmt.Println("raw body:", string(body))
-		rawURL := strings.Split(string(body), "=")[1]
-		fmt.Println("rawURL:", rawURL)
+		var urlMap urlMap
+		json.Unmarshal(body, &urlMap)
+		fmt.Println("rawURL:", urlMap.FullURL)
+
+		// Validate URL from User
 		var URL string
-		if strings.Contains(rawURL, "http://") || strings.Contains(rawURL, "https://") {
-			_, err := http.Get(rawURL)
+		if strings.Contains(urlMap.FullURL, "http://") || strings.Contains(urlMap.FullURL, "https://") {
+			_, err := http.Get(urlMap.FullURL)
 			if err != nil {
 				fmt.Println("URL not reachable:", err)
 				return
 			}
-			fmt.Println("Final URL:", rawURL)
+			fmt.Println("Final URL:", urlMap.FullURL)
 		} else {
 			fmt.Println("Missing http/https. Adding it in...")
-			URL = "https://" + rawURL
+			URL = "https://" + urlMap.FullURL
 			_, err := http.Get(URL)
 			if err != nil {
 				fmt.Println("URL not reachable:", err)
 				return
 			}
 			fmt.Println("Final URL:", URL)
+			// I learned how to split my project into multiple files! (see below)
+			// printSomething("test")
 		}
-		fmt.Println("We good!")
+		if urlMap.Shortcut != "" {
+			fmt.Println("User requested shortcut:", urlMap.Shortcut)
+		} else {
+			fmt.Println("User did not request a shortcut. Generating one...")
+			shortcut := generateRandString()
+			fmt.Println("Generated shortcut:", shortcut)
+		}
+
 		// check the short url that the user entered, and see if it's already in use.
 		// if it is already in use
 		// display an error on the screen,
