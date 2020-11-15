@@ -24,6 +24,8 @@ type urlMap struct {
 	Shortcut string
 }
 
+var shortcut string
+
 func generateRandString() string {
 	const alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := make([]byte, 6)
@@ -31,6 +33,12 @@ func generateRandString() string {
 		bytes[i] = alpha[rand.Intn(len(alpha))]
 	}
 	return string(bytes)
+}
+
+func redirectHandler(w http.ResponseWriter, r *http.Request) {
+	// This handler should take in the shortcut so that we can handle it
+	// Look up the shortcut and figure out what URL it's mapped to
+	// Redirect the user to that URL
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -56,6 +64,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			fmt.Println("Final URL:", urlMap.FullURL)
+			URL = urlMap.FullURL
 		} else {
 			fmt.Println("Missing http/https. Adding it in...")
 			URL = "https://" + urlMap.FullURL
@@ -65,16 +74,21 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			fmt.Println("Final URL:", URL)
-			// I learned how to split my project into multiple files! (see below)
-			// printSomething("test")
 		}
+
+		// Create Shortcut for URL
 		if urlMap.Shortcut != "" {
+			shortcut = urlMap.Shortcut
 			fmt.Println("User requested shortcut:", urlMap.Shortcut)
 		} else {
 			fmt.Println("User did not request a shortcut. Generating one...")
-			shortcut := generateRandString()
+			shortcut = generateRandString()
 			fmt.Println("Generated shortcut:", shortcut)
 		}
+
+		WriteURLMap(URL, shortcut)
+		path := ReadURLMap(shortcut)
+		fmt.Println(path)
 
 		// check the short url that the user entered, and see if it's already in use.
 		// if it is already in use
@@ -91,6 +105,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	rand.Seed(time.Now().Unix())
+	// redirectHandler should be a closure that passes in the shortcut so that we can use it later
+	//http.HandleFunc("/"+shortcut, redirectHandler)
 	http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(":8000", nil)
 }
