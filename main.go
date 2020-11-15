@@ -39,7 +39,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		// Serve the homepage
-		http.ServeFile(w, r, "index.html")
+		http.ServeFile(w, r, "./static/index.html")
 		return
 
 	case "POST":
@@ -94,6 +94,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	rand.Seed(time.Now().Unix())
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(":8000", nil)
 }
