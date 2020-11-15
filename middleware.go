@@ -4,8 +4,7 @@ import (
 	"fmt"
 )
 
-// Create a map that will temporarily store the data until DB is ready
-
+// This map is temporary until I wire up my DB.
 var db = make(map[string]string)
 
 // WriteURLMap saves a mapping of Shortcut to URL

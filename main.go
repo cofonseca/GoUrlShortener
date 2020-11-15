@@ -10,14 +10,7 @@ import (
 	"time"
 )
 
-// this should be an API
-
-// User will paste in a long URL
-// Give user option to create their own short URL sub-path
-// If the sub-path is not available, pop an error on the page and let them know
-// Optionally, just randomly generate a sub-path
-// We need to store all of these sub-paths as well as the URLs that they should go to
-// We need a router that can read these sub-paths from a db and  redirect to the real URL
+// Front-end will need to send JSON since that's what we're working with.
 
 type urlMap struct {
 	FullURL  string
@@ -35,16 +28,17 @@ func generateRandString() string {
 	return string(bytes)
 }
 
-func redirectHandler(w http.ResponseWriter, r *http.Request) {
-	// This handler should take in the shortcut so that we can handle it
-	// Look up the shortcut and figure out what URL it's mapped to
-	// Redirect the user to that URL
+func redirectHandler(shortcut string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		redirectURL := ReadURLMap(shortcut)
+		http.Redirect(w, r, redirectURL, 302)
+	}
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
-		// serve the home page
+		// Serve the homepage
 		http.ServeFile(w, r, "index.html")
 		return
 
@@ -86,27 +80,20 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Generated shortcut:", shortcut)
 		}
 
+		// Save the URL and Shortcut in a map to be read later
+		// This will eventually be stored in a DB
 		WriteURLMap(URL, shortcut)
-		path := ReadURLMap(shortcut)
-		fmt.Println(path)
-
-		// check the short url that the user entered, and see if it's already in use.
-		// if it is already in use
-		// display an error on the screen,
-		//and give the user the option to pick a new one or have the app generate a new one automatically
-		// if not, create a new mapping between the short url and the long url
-		// then, save that in the db and create a new handler
+		http.HandleFunc(("/" + shortcut), redirectHandler(shortcut))
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Println("User is making a request with a method that isn't allowed.")
 	}
 
 }
 
 func main() {
 	rand.Seed(time.Now().Unix())
-	// redirectHandler should be a closure that passes in the shortcut so that we can use it later
-	//http.HandleFunc("/"+shortcut, redirectHandler)
 	http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(":8000", nil)
 }
