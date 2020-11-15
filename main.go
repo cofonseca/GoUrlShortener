@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -37,10 +38,39 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		// serve the home page
 		http.ServeFile(w, r, "index.html")
 		return
+
 	case "POST":
+		// sanitize the URL
 		body, _ := ioutil.ReadAll(r.Body)
-		fmt.Println(string(body))
-		return
+		fmt.Println("raw body:", string(body))
+		rawURL := strings.Split(string(body), "=")[1]
+		fmt.Println("rawURL:", rawURL)
+		var URL string
+		if strings.Contains(rawURL, "http://") || strings.Contains(rawURL, "https://") {
+			_, err := http.Get(rawURL)
+			if err != nil {
+				fmt.Println("URL not reachable:", err)
+				return
+			}
+			fmt.Println("Final URL:", rawURL)
+		} else {
+			fmt.Println("Missing http/https. Adding it in...")
+			URL = "https://" + rawURL
+			_, err := http.Get(URL)
+			if err != nil {
+				fmt.Println("URL not reachable:", err)
+				return
+			}
+			fmt.Println("Final URL:", URL)
+		}
+		fmt.Println("We good!")
+		// check the short url that the user entered, and see if it's already in use.
+		// if it is already in use
+		// display an error on the screen,
+		//and give the user the option to pick a new one or have the app generate a new one automatically
+		// if not, create a new mapping between the short url and the long url
+		// then, save that in the db and create a new handler
+
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
