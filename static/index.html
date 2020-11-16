@@ -2,10 +2,12 @@
   <head>
   </head>
   <body>
+    <h1>Rebred</h1>
     <form>
-      <input type="text" id="fullURL" name="fullURL" value="Full URL to shorten"><br><br>
-      <input type="text" id="shortURL" name="shortURL" value="Choose a sub-URL"><br><br>
-      <input type="submit" value="Shorten!">
+      <input type="text" id="fullURL" onfocus="this.value=''" name="fullURL" value="Full URL to shorten"/>
+      <p>Optional: Shorten to:</p>
+      <p>reb.red/<input type="text" id="shortURL" onfocus="this.value=''" name="shortURL" value="Sub-URL"/></p>
+      <input type="button" value="Shorten!" id="submit"/>
   </form>
     <p id="test">.</p>
   </body>
