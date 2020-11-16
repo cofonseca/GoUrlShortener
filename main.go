@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// Front-end will need to send JSON since that's what we're working with.
+//TODO: There's a bug that allows the same shortcut to be registerd twice. Handler doesn't like that.
 
 type urlMap struct {
 	FullURL  string
@@ -84,6 +84,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		// This will eventually be stored in a DB
 		WriteURLMap(URL, shortcut)
 		http.HandleFunc(("/" + shortcut), redirectHandler(shortcut))
+		w.WriteHeader(http.StatusOK)
+		w.Header().Add("Content-Type", "text/html")
+		//TODO: This should be a proper JSON response instead of just a string.
+		json.NewEncoder(w).Encode(shortcut)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
