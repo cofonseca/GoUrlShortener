@@ -6,7 +6,7 @@ submitButton.onclick = function() {
     var xhr = new XMLHttpRequest();
     var fullURL = document.getElementById("fullURL");
     var shortURL = document.getElementById("shortURL");
-    if (shortURL.value == "Sub-Path") {
+    if (shortURL.value == "Sub-URL") {
         shortURL.value = ""
     }
     var data = JSON.stringify({ "fullURL": fullURL.value, "shortcut": shortURL.value }); 
