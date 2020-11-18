@@ -6,6 +6,9 @@ submitButton.onclick = function() {
     var xhr = new XMLHttpRequest();
     var fullURL = document.getElementById("fullURL");
     var shortURL = document.getElementById("shortURL");
+    if (shortURL.value == "Sub-Path") {
+        shortURL.value = ""
+    }
     var data = JSON.stringify({ "fullURL": fullURL.value, "shortcut": shortURL.value }); 
     xhr.open('POST', baseURL, true);
     xhr.setRequestHeader("Content-Type", "application/json");
