@@ -1,15 +1,30 @@
 <html>
   <head>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css">
+    <link rel="stylesheet" href="./static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">  
   </head>
   <body>
     <h1>Reb.red</h1>
-    <form>
-      <input type="text" id="fullURL" onfocus="this.value=''" name="fullURL" value="Full URL to shorten"/>
-      <p>Optional: Shorten to:</p>
-      <p>https://reb.red/<input type="text" id="shortURL" onfocus="this.value=''" name="shortURL" value="Sub-URL"/></p>
-      <input type="button" value="Shorten!" id="submit"/>
-  </form>
-    <p id="test">.</p>
+    <div class="pure-g">
+      <div class="pure-u-1-3"></div>
+      <div class="pure-u-1-3" id="center-box">
+        <form class="pure-form">
+          <label for="fullURL" id="fullUrlLabel">URL to Shorten</label>
+          <input type="text" id="fullURL" onfocus="this.value=''" size="50" name="fullURL" value="URL"/>
+          <div id="shortUrlGroup">
+            <label for="shortURL" id=shortUrlLabel>Optional: Shorten to reb.red/</label>
+            <input type="text" id="shortURL" onfocus="this.value=''" size="5" name="shortURL" value="shortcut"/>
+            <input type="button" value="Shorten!" id="submit" class="pure-button pure-button-primary"/>
+          </div>
+          <div>
+            <p id="result"></p>
+          </div>
+        </form>
+      </div>
+      <div class="pure-u-1-3"></div>
+    </div>
+    <p id="footer">Created by Corey Fonseca | <a href="https://github.com/cofonseca/Rebred">Find this on GitHub</a></p>
   </body>
   <footer>
     <script src="./static/main.js"></script>

@@ -1,4 +1,4 @@
-var p = document.getElementById("test")
+var result = document.getElementById("result")
 const baseURL = window.location.href
 
 submitButton = document.getElementById("submit")
@@ -6,7 +6,7 @@ submitButton.onclick = function() {
     var xhr = new XMLHttpRequest();
     var fullURL = document.getElementById("fullURL");
     var shortURL = document.getElementById("shortURL");
-    if (shortURL.value == "Sub-URL") {
+    if (shortURL.value == "shortcut") {
         shortURL.value = ""
     }
     var data = JSON.stringify({ "fullURL": fullURL.value, "shortcut": shortURL.value }); 
@@ -17,7 +17,7 @@ submitButton.onclick = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status = 200) {
                 var path = JSON.parse(xhr.responseText)
-                p.innerHTML = ('Success! Here\'s your link: ' + '<a href="' + baseURL + path + '">' + baseURL + path + '</a>')
+                result.innerHTML = ('Here\'s your link: ' + '<a href="' + baseURL + path + '">' + baseURL + path + '</a>')
             } else {
                 console.log("The server returned an error.")
             }

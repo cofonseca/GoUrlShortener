@@ -1,0 +1,66 @@
+body {
+    background-color: #b82d23;
+}
+
+h1 {
+    text-align: center;
+    font-family: "consolas";
+    color: white;
+}
+
+p {
+    font-family: "arial";
+}
+
+#center-box {
+    background-color: white;
+    padding-top: 20px;
+    height: 200px;
+}
+
+#fullURL {
+    margin: 0 auto;
+    display: block;
+}
+
+#fullUrlLabel {
+    text-align: center;
+    display: block;
+}
+
+#shortUrlGroup {
+    padding: 15px 0px 15px 0px;
+    text-align: center;
+    display: block;
+}
+
+#submit {
+    margin-left: 15px;
+}
+
+#result {
+    font-weight: bold;
+    text-align: center;
+}
+
+a:link, a:visited, a:active {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #b82d23;
+    text-decoration: underline;
+}
+
+#footer {
+    color: white;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 5px;
+    font-family: "consolas";
+}
+
+#footer>a {
+    color: white;
+}
