@@ -1,5 +1,5 @@
 var p = document.getElementById("test")
-const baseURL = "http://localhost:8000/"
+const baseURL = window.location.href
 
 submitButton = document.getElementById("submit")
 submitButton.onclick = function() {
@@ -7,7 +7,7 @@ submitButton.onclick = function() {
     var fullURL = document.getElementById("fullURL");
     var shortURL = document.getElementById("shortURL");
     var data = JSON.stringify({ "fullURL": fullURL.value, "shortcut": shortURL.value }); 
-    xhr.open('POST', 'http://localhost:8000', true);
+    xhr.open('POST', baseURL, true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onreadystatechange = function () {
