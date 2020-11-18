@@ -18,16 +18,22 @@ p {
     height: 200px;
     margin: 0 auto;
     text-align: center;
+    display: block;
 }
 
 #fullURL {
     margin: 0 auto;
     display: block;
+    width: 90%;
 }
 
 #fullUrlLabel {
     text-align: center;
     display: block;
+}
+
+#shortURL {
+    width: 18%;
 }
 
 #shortUrlGroup {
