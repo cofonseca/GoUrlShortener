@@ -15,6 +15,8 @@ p {
 #center-box {
     background-color: white;
     padding-top: 20px;
+    width: 90%;
+    max-width: 500px;
     height: 200px;
     margin: 0 auto;
     text-align: center;
@@ -33,7 +35,10 @@ p {
 }
 
 #shortURL {
-    width: 18%;
+    width: 25%;
+    max-width: 80px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 #shortUrlGroup {
