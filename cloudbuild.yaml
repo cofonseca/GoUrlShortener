@@ -1,0 +1,31 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  id: 'build-container-image'
+  args:
+    - 'build'
+    - '--no-cache'
+    - '-t'
+    - 'gcr.io/$PROJECT_ID/rebred:latest
+    - '.'
+  waitFor: ['-']
+
+- name: gcr.io/cloud-builders/docker
+  id: 'push-container-image'
+  args:
+    - 'push'
+    - 'gcr.io/$PROJECT_ID/rebred:latest'
+  waitFor: ['build-container-image']
+
+- name: gcr.io/cloud-builders/gcloud-slim
+  id: 'deploy'
+  args:
+    - run
+    - services
+    - update
+    - rebred
+    - '--platform=managed'
+    - '--image=gcr.io/$PROJECT_ID/rebred:latest'
+    - '--region=us-central1'
+    - '--quiet'
+images:
+  - 'gcr.io/$PROJECT_ID/rebred'
