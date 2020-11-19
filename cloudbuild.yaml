@@ -5,7 +5,7 @@ steps:
     - 'build'
     - '--no-cache'
     - '-t'
-    - 'gcr.io/$PROJECT_ID/rebred:latest
+    - 'gcr.io/$_REPO_PROJ_ID/rebred:latest
     - '.'
   waitFor: ['-']
 
@@ -13,7 +13,7 @@ steps:
   id: 'push-container-image'
   args:
     - 'push'
-    - 'gcr.io/$PROJECT_ID/rebred:latest'
+    - 'gcr.io/$_REPO_PROJ_ID/rebred:latest'
   waitFor: ['build-container-image']
 
 - name: gcr.io/cloud-builders/gcloud-slim
@@ -24,8 +24,8 @@ steps:
     - update
     - rebred
     - '--platform=managed'
-    - '--image=gcr.io/$PROJECT_ID/rebred:latest'
+    - '--image=gcr.io/$_REPO_PROJ_ID/rebred:latest'
     - '--region=us-central1'
     - '--quiet'
 images:
-  - 'gcr.io/$PROJECT_ID/rebred'
+  - 'gcr.io/$_REPO_PROJ_ID/rebred'
