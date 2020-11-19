@@ -5,7 +5,7 @@ steps:
     - 'build'
     - '--no-cache'
     - '-t'
-    - 'gcr.io/$_REPO_PROJ_ID/rebred:latest
+    - 'gcr.io/$_REPO_PROJ_ID/rebred:latest'
     - '.'
   waitFor: ['-']
 
@@ -19,10 +19,10 @@ steps:
 - name: gcr.io/cloud-builders/gcloud-slim
   id: 'deploy'
   args:
-    - run
-    - services
-    - update
-    - rebred
+    - 'run'
+    - 'services'
+    - 'update'
+    - 'rebred'
     - '--platform=managed'
     - '--image=gcr.io/$_REPO_PROJ_ID/rebred:latest'
     - '--region=us-central1'
