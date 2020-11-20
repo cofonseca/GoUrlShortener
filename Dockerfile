@@ -5,8 +5,10 @@ ENV GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64
 
+RUN apk --no-cache --update add ca-certificates
+
 WORKDIR /rebred
 
 COPY . .
 
-CMD go run main.go middleware.go
+CMD go run .
