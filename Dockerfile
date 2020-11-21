@@ -5,12 +5,10 @@ ENV GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64
 
-RUN apk --no-cache --update add ca-certificates
+COPY . .
 
 WORKDIR /rebred
 
-COPY . .
-
-RUN go build .
+RUN apk --no-cache --update add ca-certificates && go build .
 
 CMD ./rebred
