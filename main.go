@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -24,16 +23,19 @@ func generateRandString() string {
 	return string(bytes)
 }
 
+var conf *config
+
 func main() {
-	//TODO: Get port from config
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8000"
+	conf, err := getConfig()
+	if err != nil {
+		fmt.Println("Error getting config.")
+		return
 	}
+	//TODO: Get port from config
 	rand.Seed(time.Now().Unix())
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", indexHandler)
-	fmt.Println("Listening on port", port)
-	http.ListenAndServe((":" + port), nil)
+	fmt.Println("Listening on port", conf.Port)
+	http.ListenAndServe(fmt.Sprintf("%s:%d", "", conf.Port), nil)
 }

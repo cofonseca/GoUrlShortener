@@ -11,18 +11,7 @@ import (
 func WriteURLMap(URL string, Shortcut string) {
 	ctx := context.Background()
 
-	// Get Credentials
-	// TODO: Read JSON from config/environment, not file. This is temporary.
-	//data, err := ioutil.ReadFile("./rebred.json")
-	//if err != nil {
-	//	//TODO: Kill the app if we can't find the credential file.
-	//	fmt.Println("Can't read JSON file:", err)
-	//}
-
-	// Create Firestore Client
-	//TODO: Read the project ID from config
-	//, option.WithCredentialsJSON(data)
-	client, err := firestore.NewClient(ctx, "rebred-296012")
+	client, err := firestore.NewClient(ctx, conf.DBProjectID)
 	if err != nil {
 		//TODO: Kill the app if we can't connect to DB.
 		fmt.Println("Can't create Firestore client:", err)
@@ -31,7 +20,7 @@ func WriteURLMap(URL string, Shortcut string) {
 	defer client.Close()
 
 	fmt.Println("WRITING TO DB")
-	_, err = client.Collection("urlmap").Doc(Shortcut).Create(ctx, map[string]interface{}{
+	_, err = client.Collection(conf.DBCollectionName).Doc(Shortcut).Create(ctx, map[string]interface{}{
 		"FullURL":  URL,
 		"Shortcut": Shortcut,
 	})
@@ -44,18 +33,7 @@ func WriteURLMap(URL string, Shortcut string) {
 func ReadURLMap(Shortcut string) string {
 	ctx := context.Background()
 
-	// Get Credentials
-	// TODO: Read JSON from config/environment, not file. This is temporary.
-	//data, err := ioutil.ReadFile("./rebred.json")
-	//if err != nil {
-	//	//TODO: Kill the app if we can't find the credential file.
-	//	fmt.Println("Can't read JSON file:", err)
-	//}
-
-	// Create Firestore Client
-	//TODO: Read the project ID from config
-	//, option.WithCredentialsJSON(data)
-	client, err := firestore.NewClient(ctx, "rebred-296012")
+	client, err := firestore.NewClient(ctx, conf.DBProjectID)
 	if err != nil {
 		//TODO: Kill the app if we can't connect to DB.
 		fmt.Println("Can't create Firestore client:", err)
@@ -65,7 +43,7 @@ func ReadURLMap(Shortcut string) string {
 
 	fmt.Println("READING FROM DB")
 	// if this returns an error, then the shortcut doesn't exist, and we should handle that appropriately.
-	doc, err := client.Collection("urlmap").Doc(Shortcut).Get(ctx)
+	doc, err := client.Collection(conf.DBCollectionName).Doc(Shortcut).Get(ctx)
 	if err != nil {
 		fmt.Println("Error getting the document:", err)
 	}
