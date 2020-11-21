@@ -11,4 +11,6 @@ WORKDIR /rebred
 
 COPY . .
 
-CMD go run .
+RUN go build .
+
+CMD ./rebred
