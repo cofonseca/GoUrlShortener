@@ -28,5 +28,14 @@ steps:
     - '--region=us-central1'
     - '--set-env-vars=${_ENV1},${_ENV2}'
     - '--quiet'
+
+- name: gcr.io/cloud-builders/gcloud-slim
+  id: 'redirect-traffic'
+  args:
+    - 'run'
+    - 'services'
+    - 'update-traffic'
+    - 'rebred'
+    ' --to-latest'
 images:
   - 'gcr.io/$_REPO_PROJ_ID/rebred'
