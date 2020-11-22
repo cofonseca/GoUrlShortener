@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-//TODO: There's a bug that allows the same shortcut to be registerd twice. Handler doesn't like that.
-
 type urlMap struct {
 	FullURL  string
 	Shortcut string
@@ -24,12 +22,14 @@ func generateRandString() string {
 }
 
 func main() {
+	// Get Config
 	conf, err := getConfig()
 	if err != nil {
 		fmt.Println("Error getting config.")
 		return
 	}
-	//TODO: Get port from config
+
+	// Start Server
 	rand.Seed(time.Now().Unix())
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
