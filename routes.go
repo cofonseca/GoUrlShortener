@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -21,7 +22,28 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		// Serve the homepage
-		http.ServeFile(w, r, "./static/index.html")
+		// If looking for /, serve index.html
+		// If looking for a string, check for an entry in the DB
+		// If DB entry exists, re-register the handler using redirectHandler() and send the user there
+		// Else, rewrite the URL (r.URL.Path = "/") to send them back to/
+		if r.URL.Path != "/" && r.URL.Path != "/favicon.ico" {
+			validPath := regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
+			path := strings.Replace(r.URL.Path, "/", "", 1)
+			if validPath(path) {
+				redirectURL := ReadURLMap(path)
+				if redirectURL != "" {
+					http.Redirect(w, r, redirectURL, 302)
+				} else {
+					fmt.Println(path, "is valid, but doesn't exist in the DB. Redirecting to /")
+					http.Redirect(w, r, "/", 302)
+				}
+			} else {
+				fmt.Println(path, "includes non-letter characters and is invalid. Redirecting to /")
+				http.Redirect(w, r, "/", 302)
+			}
+		} else {
+			http.ServeFile(w, r, "./static/index.html")
+		}
 		return
 
 	case "POST":
@@ -29,7 +51,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		body, _ := ioutil.ReadAll(r.Body)
 		var urlMap urlMap
 		json.Unmarshal(body, &urlMap)
-		fmt.Println("rawURL:", urlMap.FullURL)
 
 		// Validate URL from User
 		if strings.Contains(urlMap.FullURL, "http://") || strings.Contains(urlMap.FullURL, "https://") {
@@ -38,7 +59,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("URL not reachable:", err)
 				return
 			}
-			fmt.Println("Final URL:", urlMap.FullURL)
+			fmt.Println("User requested URL:", urlMap.FullURL)
 		} else {
 			fmt.Println("Missing http/https. Adding it in...")
 			urlMap.FullURL = "https://" + urlMap.FullURL
@@ -47,7 +68,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("URL not reachable:", err)
 				return
 			}
-			fmt.Println("Final URL:", urlMap.FullURL)
+			fmt.Println("User requested URL:", urlMap.FullURL)
 		}
 
 		// Create Shortcut for URL
