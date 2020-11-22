@@ -21,11 +21,9 @@ func redirectHandler(shortcut string) http.HandlerFunc {
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
-		// Serve the homepage
-		// If looking for /, serve index.html
-		// If looking for a string, check for an entry in the DB
-		// If DB entry exists, re-register the handler using redirectHandler() and send the user there
-		// Else, rewrite the URL (r.URL.Path = "/") to send them back to/
+		// If the user requests a route other than /,
+		// check for that route in the DB and redirect to the full URL if it exists,
+		// else, redirect the user back to the homepage.
 		if r.URL.Path != "/" && r.URL.Path != "/favicon.ico" {
 			validPath := regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
 			path := strings.Replace(r.URL.Path, "/", "", 1)
@@ -82,12 +80,23 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Save the URL and Shortcut in a map to be read later
 		// This will eventually be stored in a DB
-		WriteURLMap(urlMap.FullURL, urlMap.Shortcut)
-		http.HandleFunc(("/" + urlMap.Shortcut), redirectHandler(urlMap.Shortcut))
-		w.WriteHeader(http.StatusOK)
-		w.Header().Add("Content-Type", "text/html")
-		//TODO: This should be a proper JSON response instead of just a string.
-		json.NewEncoder(w).Encode(urlMap.Shortcut)
+		success := WriteURLMap(urlMap.FullURL, urlMap.Shortcut)
+		if success == false {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Header().Add("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"Success":  success,
+				"Shortcut": "",
+			})
+		} else {
+			http.HandleFunc(("/" + urlMap.Shortcut), redirectHandler(urlMap.Shortcut))
+			w.WriteHeader(http.StatusOK)
+			w.Header().Add("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"Success":  success,
+				"Shortcut": urlMap.Shortcut,
+			})
+		}
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)

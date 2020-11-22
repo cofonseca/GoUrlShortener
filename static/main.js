@@ -16,8 +16,13 @@ submitButton.onclick = function() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status = 200) {
-                var path = JSON.parse(xhr.responseText)
-                result.innerHTML = ('Here\'s your link: ' + '<a href="' + baseURL + path + '">' + baseURL + path + '</a>')
+                var response = JSON.parse(xhr.responseText)
+                if (response.Success == true) {
+                    result.innerHTML = ('Here\'s your link: ' + '<a href="' + baseURL + response.Shortcut + '">' + baseURL + response.Shortcut + '</a>')
+                } else {
+                    result.innerHTML = ('Error: ' + shortURL.value + ' already exists!')
+                }
+                
             } else {
                 console.log("The server returned an error.")
             }
@@ -25,4 +30,4 @@ submitButton.onclick = function() {
       };
     console.log("Sending data: " + data)
     xhr.send(data)
-}
+}   

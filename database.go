@@ -8,7 +8,7 @@ import (
 )
 
 // WriteURLMap saves a mapping of Shortcut to URL
-func WriteURLMap(URL string, Shortcut string) {
+func WriteURLMap(URL string, Shortcut string) bool {
 	ctx := context.Background()
 
 	client, err := firestore.NewClient(ctx, conf.DBProjectID)
@@ -23,9 +23,12 @@ func WriteURLMap(URL string, Shortcut string) {
 	})
 	if err != nil {
 		fmt.Println("Error writing to DB:", err)
+		return false
 	}
 
 	defer client.Close()
+
+	return true
 }
 
 // ReadURLMap returns the full URL for a given shortcut
@@ -38,7 +41,6 @@ func ReadURLMap(Shortcut string) string {
 		fmt.Println("Can't create Firestore client:", err)
 	}
 
-	// if this returns an error, then the shortcut doesn't exist, and we should handle that appropriately.
 	var result interface{}
 	doc, err := client.Collection(conf.DBCollectionName).Doc(Shortcut).Get(ctx)
 	fmt.Println(doc)
