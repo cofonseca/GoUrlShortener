@@ -39,14 +39,19 @@ func ReadURLMap(Shortcut string) string {
 	}
 
 	// if this returns an error, then the shortcut doesn't exist, and we should handle that appropriately.
+	var result interface{}
 	doc, err := client.Collection(conf.DBCollectionName).Doc(Shortcut).Get(ctx)
+	fmt.Println(doc)
 	if err != nil {
 		fmt.Println("Error getting the document:", err)
-	}
-	// only run this block if the block above was successful
-	result, err := doc.DataAt("FullURL")
-	if err != nil {
-		fmt.Println("Error reading the document:", err)
+		return ""
+	} else {
+		result, err = doc.DataAt("FullURL")
+		fmt.Println(result)
+		if err != nil {
+			fmt.Println("Error reading the document:", err)
+			return ""
+		}
 	}
 
 	defer client.Close()
