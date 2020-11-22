@@ -38,7 +38,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("URL not reachable:", err)
 				return
 			}
-			urlMap.FullURL = urlMap.FullURL
 			fmt.Println("Final URL:", urlMap.FullURL)
 		} else {
 			fmt.Println("Missing http/https. Adding it in...")

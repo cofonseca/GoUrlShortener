@@ -17,9 +17,6 @@ func WriteURLMap(URL string, Shortcut string) {
 		fmt.Println("Can't create Firestore client:", err)
 	}
 
-	defer client.Close()
-
-	fmt.Println("WRITING TO DB")
 	_, err = client.Collection(conf.DBCollectionName).Doc(Shortcut).Create(ctx, map[string]interface{}{
 		"FullURL":  URL,
 		"Shortcut": Shortcut,
@@ -27,6 +24,8 @@ func WriteURLMap(URL string, Shortcut string) {
 	if err != nil {
 		fmt.Println("Error writing to DB:", err)
 	}
+
+	defer client.Close()
 }
 
 // ReadURLMap returns the full URL for a given shortcut
@@ -39,9 +38,6 @@ func ReadURLMap(Shortcut string) string {
 		fmt.Println("Can't create Firestore client:", err)
 	}
 
-	defer client.Close()
-
-	fmt.Println("READING FROM DB")
 	// if this returns an error, then the shortcut doesn't exist, and we should handle that appropriately.
 	doc, err := client.Collection(conf.DBCollectionName).Doc(Shortcut).Get(ctx)
 	if err != nil {
@@ -52,6 +48,9 @@ func ReadURLMap(Shortcut string) string {
 	if err != nil {
 		fmt.Println("Error reading the document:", err)
 	}
+
+	defer client.Close()
 	fmt.Println(result)
 	return fmt.Sprintf("%s", result)
+
 }

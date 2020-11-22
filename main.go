@@ -23,8 +23,6 @@ func generateRandString() string {
 	return string(bytes)
 }
 
-var conf *config
-
 func main() {
 	conf, err := getConfig()
 	if err != nil {
@@ -37,5 +35,5 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", indexHandler)
 	fmt.Println("Listening on port", conf.Port)
-	http.ListenAndServe(fmt.Sprintf("%s:%d", "", conf.Port), nil)
+	http.ListenAndServe(fmt.Sprintf(":%d", conf.Port), nil)
 }
