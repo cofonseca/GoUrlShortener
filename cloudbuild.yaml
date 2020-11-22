@@ -37,7 +37,7 @@ steps:
     - 'services'
     - 'update-traffic'
     - 'rebred'
-    ' --to-latest'
+    - '--to-latest'
   waitFor: ['deploy']
 images:
   - 'gcr.io/$_REPO_PROJ_ID/rebred'
