@@ -26,6 +26,7 @@ steps:
     - '--platform=managed'
     - '--image=gcr.io/$_REPO_PROJ_ID/rebred:latest'
     - '--region=us-central1'
+    - '--set-env-vars=${_ENV1},${_ENV2}'
     - '--quiet'
 images:
   - 'gcr.io/$_REPO_PROJ_ID/rebred'
