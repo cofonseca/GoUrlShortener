@@ -38,6 +38,8 @@ steps:
     - 'update-traffic'
     - 'rebred'
     - '--to-latest'
+    - '--platform=managed'
+    - '--region=us-central1'
   waitFor: ['deploy']
 images:
   - 'gcr.io/$_REPO_PROJ_ID/rebred'
