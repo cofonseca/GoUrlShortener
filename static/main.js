@@ -20,7 +20,7 @@ submitButton.onclick = function() {
                 if (response.Success == true) {
                     result.innerHTML = ('Here\'s your link: ' + '<a href="' + baseURL + response.Shortcut + '">' + baseURL + response.Shortcut + '</a>')
                 } else {
-                    result.innerHTML = ('Error: ' + shortURL.value + ' already exists!')
+                    result.innerHTML = ('Sorry, ' + shortURL.value + ' already exists! Try something else.')
                 }
                 
             } else {
