@@ -44,7 +44,7 @@ steps:
 
 - name: gcr.io/cloud-builders/git
   id: 'drop-cache'
-  entrypoint: '/bin/sh'
+  entrypoint: 'bash'
   args:
   - '-c'
   - |
@@ -53,6 +53,7 @@ steps:
       -H "X-Auth-Key: $$CLOUDFLARE_API_KEY" \
       -H "Content-Type: application/json" \
       --data '{"purge_everything":true}'
+  secretEnv: ['CLOUDFLARE_API_KEY', 'CLOUDFLARE_API_ZONE']
 
 availableSecrets:
   secretManager:
