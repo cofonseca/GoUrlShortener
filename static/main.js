@@ -1,19 +1,32 @@
 var result = document.getElementById("result")
 const baseURL = window.location.href
+var submitButton = document.getElementById("submit")
+submitButton.disabled = true
+var fullURL = document.getElementById("fullURL");
+var shortURL = document.getElementById("shortURL");
 
-submitButton = document.getElementById("submit")
+function validateInput(){
+    if (fullURL.value == "") {
+        submitButton.disabled = true
+        submitButton.classList.replace("pure-button-primary","pure-button-active")
+    } else {
+        submitButton.disabled = false
+        submitButton.classList.replace("pure-button-active","pure-button-primary")
+    }
+}
+
 submitButton.onclick = function() {
+    result.innerHTML = ''
     submitButton.classList.replace("pure-button-primary","pure-button-active")
     submitButton.disabled = true
     var xhr = new XMLHttpRequest();
-    var fullURL = document.getElementById("fullURL");
-    var shortURL = document.getElementById("shortURL");
     if (shortURL.value == "shortcut") {
         shortURL.value = ""
     }
 
     if (fullURL.value == "") {
         console.log("URL cannot be blank")
+        result.innerHTML = 'URL cannot be blank. Please try again'
         submitButton.classList.replace("pure-button-active","pure-button-primary")
         submitButton.disabled = false
     } else {
