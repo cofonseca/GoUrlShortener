@@ -4,6 +4,7 @@ const baseURL = window.location.href
 submitButton = document.getElementById("submit")
 submitButton.onclick = function() {
     submitButton.classList.replace("pure-button-primary","pure-button-active")
+    submitButton.disabled = true
     var xhr = new XMLHttpRequest();
     var fullURL = document.getElementById("fullURL");
     var shortURL = document.getElementById("shortURL");
@@ -14,6 +15,7 @@ submitButton.onclick = function() {
     if (fullURL.value == "") {
         console.log("URL cannot be blank")
         submitButton.classList.replace("pure-button-active","pure-button-primary")
+        submitButton.disabled = false
     } else {
         var data = JSON.stringify({ "fullURL": fullURL.value, "shortcut": shortURL.value }); 
         xhr.open('POST', baseURL, true);
@@ -28,6 +30,8 @@ submitButton.onclick = function() {
                     } else {
                         result.innerHTML = ('Sorry, ' + shortURL.value + ' already exists! Try something else.')
                     }
+                    submitButton.classList.replace("pure-button-active","pure-button-primary")
+                    submitButton.disabled = false
                     
                 } else {
                     console.log("Error response from server")
@@ -37,5 +41,4 @@ submitButton.onclick = function() {
         console.log("Sending data: " + data)
         xhr.send(data)
     }
-    submitButton.classList.replace("pure-button-active","pure-button-primary")
 }   
