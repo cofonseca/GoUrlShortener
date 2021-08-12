@@ -68,6 +68,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 				_, err := http.Get(urlMap.FullURL)
 				if err != nil {
 					fmt.Println("URL not reachable:", err)
+					http.Error(w, "URL is not reachable", 400)
 					return
 				}
 				fmt.Println("User requested URL:", urlMap.FullURL)
