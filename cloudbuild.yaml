@@ -41,8 +41,6 @@ steps:
     - '--platform=managed'
     - '--region=us-central1'
   waitFor: ['deploy']
-images:
-  - 'gcr.io/$_REPO_PROJ_ID/rebred'
 
 - name: gcr.io/cloud-builders/git
   id: 'drop-cache'
@@ -61,3 +59,6 @@ images:
       env: 'CLOUDFLARE_API_KEY'
     - versionName: projects/546950964653/secrets/cloudflare_api_zone/versions/1
       env: 'CLOUDFLARE_API_ZONE'
+
+images:
+  - 'gcr.io/$_REPO_PROJ_ID/rebred'
