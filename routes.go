@@ -85,7 +85,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		// Save the URL and Shortcut in a map to be read later
 		// This will eventually be stored in a DB
 		success := WriteURLMap(urlMap.FullURL, urlMap.Shortcut)
-		if success == false {
+		if !success {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Header().Add("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(map[string]interface{}{
