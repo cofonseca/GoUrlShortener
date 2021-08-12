@@ -43,3 +43,21 @@ steps:
   waitFor: ['deploy']
 images:
   - 'gcr.io/$_REPO_PROJ_ID/rebred'
+
+- name: gcr.io/cloud-builders/git
+  id: 'drop-cache'
+  entrypoint: '/bin/sh'
+  args:
+  - '-c'
+  - |
+    curl -X POST "https://api.cloudflare.com/client/v4/zones/$$CLOUDFLARE_API_ZONE/purge_cache" \
+      -H "X-Auth-Email: $_CLOUDFLARE_EMAIL_ADDRESS" \
+      -H "X-Auth-Key: $$CLOUDFLARE_API_KEY" \
+      -H "Content-Type: application/json" \
+      --data '{"purge_everything":true}'
+  availableSecrets:
+    secretManager:
+    - versionName: projects/546950964653/secrets/cloudflare_api_key/versions/2
+      env: 'CLOUDFLARE_API_KEY'
+    - versionName: projects/546950964653/secrets/cloudflare_api_zone/versions/1
+      env: 'CLOUDFLARE_API_ZONE'
