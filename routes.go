@@ -51,31 +51,35 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		json.Unmarshal(body, &urlMap)
 
 		// Validate URL from User
-		if strings.Contains(urlMap.FullURL, "http://") || strings.Contains(urlMap.FullURL, "https://") {
-			_, err := http.Get(urlMap.FullURL)
-			if err != nil {
-				fmt.Println("URL not reachable:", err)
-				return
-			}
-			fmt.Println("User requested URL:", urlMap.FullURL)
+		if urlMap.FullURL == "" {
+			http.Error(w, "URL cannot be empty", 400)
 		} else {
-			fmt.Println("Missing http/https. Adding it in...")
-			urlMap.FullURL = "https://" + urlMap.FullURL
-			_, err := http.Get(urlMap.FullURL)
-			if err != nil {
-				fmt.Println("URL not reachable:", err)
-				return
+			if strings.Contains(urlMap.FullURL, "http://") || strings.Contains(urlMap.FullURL, "https://") {
+				_, err := http.Get(urlMap.FullURL)
+				if err != nil {
+					fmt.Println("URL not reachable:", err)
+					return
+				}
+				fmt.Println("User requested URL:", urlMap.FullURL)
+			} else {
+				fmt.Println("Missing http/https. Adding it in...")
+				urlMap.FullURL = "https://" + urlMap.FullURL
+				_, err := http.Get(urlMap.FullURL)
+				if err != nil {
+					fmt.Println("URL not reachable:", err)
+					return
+				}
+				fmt.Println("User requested URL:", urlMap.FullURL)
 			}
-			fmt.Println("User requested URL:", urlMap.FullURL)
-		}
 
-		// Create Shortcut for URL
-		if urlMap.Shortcut != "" {
-			fmt.Println("User requested shortcut:", urlMap.Shortcut)
-		} else {
-			fmt.Println("User did not request a shortcut. Generating one...")
-			urlMap.Shortcut = generateRandString()
-			fmt.Println("Generated shortcut:", urlMap.Shortcut)
+			// Create Shortcut for URL
+			if urlMap.Shortcut != "" {
+				fmt.Println("User requested shortcut:", urlMap.Shortcut)
+			} else {
+				fmt.Println("User did not request a shortcut. Generating one...")
+				urlMap.Shortcut = generateRandString()
+				fmt.Println("Generated shortcut:", urlMap.Shortcut)
+			}
 		}
 
 		// Save the URL and Shortcut in a map to be read later
