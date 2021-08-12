@@ -53,12 +53,12 @@ steps:
       -H "X-Auth-Key: $$CLOUDFLARE_API_KEY" \
       -H "Content-Type: application/json" \
       --data '{"purge_everything":true}'
-  availableSecrets:
-    secretManager:
-    - versionName: projects/546950964653/secrets/cloudflare_api_key/versions/2
-      env: 'CLOUDFLARE_API_KEY'
-    - versionName: projects/546950964653/secrets/cloudflare_api_zone/versions/1
-      env: 'CLOUDFLARE_API_ZONE'
 
+availableSecrets:
+  secretManager:
+  - versionName: projects/546950964653/secrets/cloudflare_api_key/versions/2
+    env: 'CLOUDFLARE_API_KEY'
+  - versionName: projects/546950964653/secrets/cloudflare_api_zone/versions/1
+    env: 'CLOUDFLARE_API_ZONE'
 images:
   - 'gcr.io/$_REPO_PROJ_ID/rebred'
